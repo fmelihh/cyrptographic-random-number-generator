@@ -66,7 +66,6 @@ func (m *MersenneTwister) Cyrpth() {
 	m.twist()
 	m.index = 0
 
-	randomn
 	for i := 0; i < m.randomNumberCount; i++ {
 		fmt.Println(m.extractNumber())
 	}
