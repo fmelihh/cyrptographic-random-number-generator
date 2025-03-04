@@ -1,5 +1,5 @@
 package main
 
 type CyrptographicAlgorithm interface {
-	Cyrpth()
+	Cyrpth(fileName string, filePath string)
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 )
 
 // FORMULA
@@ -51,25 +52,35 @@ const (
 )
 
 type MersenneTwister struct {
+	fileOperator      *FileOperator
 	mt                [n]uint32
 	index             uint32
 	seedNumber        uint32
 	randomNumberCount int
 }
 
-func NewMersenneTwister(seedNumber uint32, randomNumberCount int) *MersenneTwister {
-	return &MersenneTwister{seedNumber: seedNumber, randomNumberCount: randomNumberCount}
+func NewMersenneTwister(fileOperator *FileOperator, seedNumber uint32, randomNumberCount int) *MersenneTwister {
+	return &MersenneTwister{
+		fileOperator:      fileOperator,
+		seedNumber:        seedNumber,
+		randomNumberCount: randomNumberCount,
+	}
 }
 
-func (m *MersenneTwister) Cyrpth() {
+func (m *MersenneTwister) Cyrpth(fileName string, filePath string) {
 	m.seed()
-	m.twist()
-	m.index = 0
+
+	var strVals []string = make([]string, 0)
 
 	for i := 0; i < m.randomNumberCount; i++ {
-		fmt.Println(m.extractNumber())
+		number := m.extractNumber()
+		fmt.Println(number)
+
+		strVals = append(strVals, strconv.FormatUint(uint64(number), 10))
 	}
 
+	fileName = fileName + ".txt"
+	m.fileOperator.SaveArrayToTxtFile(strVals, fileName, filePath)
 }
 
 func (m *MersenneTwister) seed() {
@@ -78,6 +89,7 @@ func (m *MersenneTwister) seed() {
 	for i := 1; i < n; i++ {
 		m.mt[i] = F*(m.mt[i-1]^(m.mt[i-1]>>(w-2))) + uint32(i)
 	}
+	m.index = n
 }
 
 func (m *MersenneTwister) twist() {
@@ -89,10 +101,15 @@ func (m *MersenneTwister) twist() {
 			m.mt[i] ^= matrixA
 		}
 	}
+
+	m.index = 0
 }
 
 func (m *MersenneTwister) extractNumber() uint32 {
 	// Once the state array is updated, we extract numbers from it using tempering, which improves randomness:
+	if m.index >= n {
+		m.twist()
+	}
 	y := m.mt[m.index]
 	m.index++
 
