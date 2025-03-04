@@ -6,6 +6,19 @@ import (
 	"time"
 )
 
+/*
+Xorshift generators use a series of XOR (exclusive OR) and bit shifts to update an internal state and generate random numbers. The key operations involve:
+
+XOR-ing the current state with a bit-shifted version of itself.
+Shifting bits left or right by a carefully chosen amount.
+Repeating the process multiple times to ensure good randomness.
+
+FORMULA
+x = x XOR (x << a)
+x = x XOR (x >> b)
+x = x XOR (x << c)
+*/
+
 const (
 	a = 13
 	b = 17
