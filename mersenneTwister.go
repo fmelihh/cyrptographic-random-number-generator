@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // FORMULA
 // STEP 1: INITIALIZATION
@@ -35,6 +37,8 @@ import "fmt"
 const (
 	n         = 624
 	mC        = 397
+	F         = 1812433253
+	w         = 32
 	matrixA   = 0x9908B0DF // Constant for the twist transformation
 	upperMask = 0x80000000 // Most significant bit (32-bit)
 	lowerMask = 0x7FFFFFFF // Least significant bits
@@ -52,24 +56,26 @@ func NewMersenneTwister(seedNumber uint32, randomNumberCount int) *MersenneTwist
 }
 
 func (m *MersenneTwister) Cyrpth() {
-	m.Seed()
+	m.seed()
+	m.twist()
+	m.index = 0
 
 	for i := 0; i < m.randomNumberCount; i++ {
-		fmt.Println(m.ExtractNumber())
+		fmt.Println(m.extractNumber())
 	}
 
 }
 
-func (m *MersenneTwister) Seed() {
+func (m *MersenneTwister) seed() {
+	// The algorithm maintains a state array of n = 624 integers, indexed from 0 to 623. The first value is initialized using a seed
 	m.mt[0] = m.seedNumber
 	for i := 1; i < n; i++ {
-		m.mt[i] = 1812433253*(m.mt[i-1]^(m.mt[i-1]>>30)) + uint32(i)
-
+		m.mt[i] = F*(m.mt[i-1]^(m.mt[i-1]>>(w-2))) + uint32(i)
 	}
-	m.index = n
 }
 
-func (m *MersenneTwister) Twist() {
+func (m *MersenneTwister) twist() {
+	// After initialization, the generator produces new random numbers by transforming the state array using a process called twisting.
 	for i := 0; i < n; i++ {
 		y := (m.mt[i] & upperMask) | (m.mt[(i+1)%n] & lowerMask)
 		m.mt[i] = m.mt[(i+mC)%n] ^ (y >> 1)
@@ -77,14 +83,10 @@ func (m *MersenneTwister) Twist() {
 			m.mt[i] ^= matrixA
 		}
 	}
-	m.index = 0
 }
 
-func (m *MersenneTwister) ExtractNumber() uint32 {
-	if m.index >= n {
-		m.Twist()
-	}
-
+func (m *MersenneTwister) extractNumber() uint32 {
+	// Once the state array is updated, we extract numbers from it using tempering, which improves randomness:
 	y := m.mt[m.index]
 	m.index++
 
