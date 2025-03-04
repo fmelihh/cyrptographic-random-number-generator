@@ -42,6 +42,12 @@ const (
 	matrixA   = 0x9908B0DF // Constant for the twist transformation
 	upperMask = 0x80000000 // Most significant bit (32-bit)
 	lowerMask = 0x7FFFFFFF // Least significant bits
+	U         = 11
+	S         = 7
+	T         = 15
+	B         = 0x9D2C5680
+	C         = 0xEFC60000
+	L         = 18
 )
 
 type MersenneTwister struct {
@@ -60,6 +66,7 @@ func (m *MersenneTwister) Cyrpth() {
 	m.twist()
 	m.index = 0
 
+	randomn
 	for i := 0; i < m.randomNumberCount; i++ {
 		fmt.Println(m.extractNumber())
 	}
@@ -90,10 +97,10 @@ func (m *MersenneTwister) extractNumber() uint32 {
 	y := m.mt[m.index]
 	m.index++
 
-	y ^= (y >> 11)
-	y ^= (y << 7) & 0x9D2C5680
-	y ^= (y << 15) & 0xEFC60000
-	y ^= (y >> 18)
+	y ^= (y >> U)
+	y ^= (y << S) & B
+	y ^= (y << T) & C
+	y ^= (y >> L)
 
 	var newY uint32 = 0
 	for {
