@@ -31,4 +31,14 @@ func main() {
 		"xorShift-2",
 		"/Users/furkanmelih/personal_projects/cyrptographic-random-number-generator",
 	)
+
+	pcg := NewPCG(fileOperator, RANDOM_NUMBER_COUNT, 32)
+	pcg.Cyrpth(
+		"pcg-1",
+		"/Users/furkanmelih/personal_projects/cyrptographic-random-number-generator",
+	)
+	pcg.Cyrpth(
+		"pcg-2",
+		"/Users/furkanmelih/personal_projects/cyrptographic-random-number-generator",
+	)
 }
