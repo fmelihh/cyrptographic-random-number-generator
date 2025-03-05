@@ -41,4 +41,15 @@ func main() {
 		"pcg-2",
 		"/Users/furkanmelih/personal_projects/cyrptographic-random-number-generator",
 	)
+
+	blumBlumShub := NewBlumBlumShub(fileOperator, RANDOM_NUMBER_COUNT)
+	blumBlumShub.Cyrpth(
+		"blumBlumShub-1",
+		"/Users/furkanmelih/personal_projects/cyrptographic-random-number-generator",
+	)
+	blumBlumShub.Cyrpth(
+		"blumBlumShub-2",
+		"/Users/furkanmelih/personal_projects/cyrptographic-random-number-generator",
+	)
+
 }
