@@ -74,10 +74,6 @@ func (b *BlumBlumShub) fillParameters() {
 	b.X = new(big.Int).Exp(seed, big.NewInt(2), b.M)
 }
 
-func (b *BlumBlumShub) generateSecureSeed() {
-
-}
-
 func (p *BlumBlumShub) Cyrpth(fileName string, filePath string) {
 	p.fillParameters()
 
