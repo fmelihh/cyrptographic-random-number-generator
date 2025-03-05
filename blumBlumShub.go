@@ -68,7 +68,7 @@ func (b *BlumBlumShub) fillParameters() {
 
 	seedModM := new(big.Int).Mod(seed, b.M)
 	if new(big.Int).GCD(nil, nil, seedModM, b.M).Cmp(big.NewInt(1)) != 0 {
-		panic(err)
+		panic(fmt.Errorf("seed must be co-prime to M"))
 	}
 
 	b.X = new(big.Int).Exp(seed, big.NewInt(2), b.M)
